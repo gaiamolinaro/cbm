@@ -1,4 +1,4 @@
-function cbm_hbi_plot(cbm, model_names, param_names, transform, k)
+function cbm_hbi_plot(cbm, model_names, param_names, transform, k, save_figs)
 % cbm_hbi_plot plots HBI main outputs
 %       cbm = cbm_hbi(cbm, k, model_names, param_names, tranform)
 % 1st input: cbm struct or its file-address (output of cbm_hbi and cbm_hbi_null)
@@ -10,10 +10,12 @@ function cbm_hbi_plot(cbm, model_names, param_names, transform, k)
 % 4th input: is a cell containig the transformation functions for
 % parameters (each cell is a function handle). If not supplied, no
 % transformation will be applied to the parameters
-% 5th input: a scaler indicating the model of interest (usually the 
+% 5th input: a scalar indicating the model of interest (usually the 
 % winning model) (optional). If not supplied, parameters of the most
 % frequent model will be plotted. If it is zero or nan, it does not plot
 % parameters.
+% 6th parameter: a Boolean telling whether to save figures (optional)
+% added by Gaia Molinaro (April 2022)
 % 
 % cbm_hbi_plot generates two figures:
 % The first figure shows metrics of Bayesian model comparison, i.e.
@@ -53,13 +55,15 @@ if nargin<2
     end
 end
 if length(model_names)~=K
-    error('The dimension of the 3th input should be %d',K);
+    error('The dimension of the 3rd input should be %d',K);
 end
 
 if nargin<5
     [~,k] = max(freq); 
     fprintf('plotting the group parameters of the most frequenct model');
 end
+
+if nargin<6, save_figs = 0; end  % default to not saving figures
 
 x  = cbm.output.group_mean{k};
 D = length(x);
@@ -187,7 +191,9 @@ for i=1:np
     ylabel(ylabels{i},'fontsize',fsy);
     set(gca,'ylim',[0 1.05]);
 end  
-
+if save_figs
+    saveas(gcf,'Bayesian Model Comparison.png')
+end
 
 %--------------------------------------------------------------------------
 % second figure: parameters
@@ -239,7 +245,9 @@ for i=1:D
     ytick(end) = [];
     set(h,'ytick', ytick);     
 end  
-
+if save_figs
+    saveas(gcf,'Parameters.png')
+end
 end
 
 function errorbarKxN(mx,ex,labels,colmap,barwidth)
@@ -302,9 +310,7 @@ end
 
 % set axes propertis
 set(gca,'box','off');
-set(gca,'ticklength', [0 0]);
-
-
+set(gca,'ticklength', [0 0])
 end
 
 function tx = sigmoid(x) %#ok<DEFNU>

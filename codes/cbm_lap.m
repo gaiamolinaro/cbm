@@ -3,7 +3,8 @@ function [cbm, success] = cbm_lap(data, model, prior, fname, pconfig)
 % [CBM, SUCCESS] = cbm_lap(DATA, MODEL, PRIOR, FNAME, PCONFIG)
 % DATA:  data (Nx1 cell) where N is number of samples
 % MODEL: a function-handle to the model computing log-likelihood of DATA 
-% given some paramete 
+% given some parameter
+%   modified by Gaia Molinaro (Apr 2022): MODEL can also be a string
 % PRIOR: a struct with two fields: mean and variance, as the gaussian prior
 %   PRIOR.mu is a d-by-1 vector, where d is the number of parameters
 %   (dimension)
@@ -47,7 +48,14 @@ function [cbm, success] = cbm_lap(data, model, prior, fname, pconfig)
 % 
 % implemented by Payam Piray, Aug 2018
 %==========================================================================
-                
+
+% first, check if the input model is a function handle
+% if not, convert it to a function
+% added by Gaia Molinaro (April 2022)
+if any(["string", "char"] == class(model))
+    model = str2func(model);
+end
+
 % evaluation if prior
 mu = prior.mean;
 v  = prior.variance;
