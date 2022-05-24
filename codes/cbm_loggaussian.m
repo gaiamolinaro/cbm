@@ -25,6 +25,11 @@ prior.logp   = -d/2*log(2*pi) +.5*logdetT -.5*(t-mu)'*T*(t-mu);
 prior.dlogp  = -T*(t-mu);
 prior.ddlogp = -T;
 
+% added by Gaia Molinaro (April 2022)
+if any(["string", "char"] == class(model))
+    model = str2func(model);
+end
+
 switch mode
     case 1
         [F] = model(theta,data); % returing logpdf(X|theta)
