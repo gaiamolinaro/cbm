@@ -116,6 +116,8 @@ while( (k<numrep) || (k>=numrep && k<numrep_med && flag==.5) || (k>=numrep && k<
         logging(verbose,fid,sprintf('--- This initialization was aborted (there might be a problem with the model)\n'));
         logging(verbose,fid,sprintf('--- The message of optimization routine is:\n'));
         logging(verbose,fid,sprintf('---    %s\n',msg.message));
+        logging(verbose,fid,sprintf('--- The initialization parameters were:\n'));
+        logging(verbose,fid,sprintf('---    %s\n',init));
     end
 end
 
