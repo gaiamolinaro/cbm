@@ -1,14 +1,13 @@
-function cbm = cbm_hbi(data,models,fcbm_maps,fname,hyper,config,optimconfigs)
+function cbm = cbm_hbi(data,models,fcbm_maps,fname,config,optimconfigs)
 % cbm_hbi implements hierarchical Bayesian inference (HBI)
 %       cbm = cbm_hbi(data,models,fcbm_maps,fname,config,optimconfigs)
 % 1st input: data for all subjects
 % 2nd input: a cell input containing function handle to models
 % 3rd input: another cell input containing file-address to files saved by cbm_lap
-% 4th input: a struct containing hyperparameters (optional)
-% 5th input: a file address for saving the output (optional)
-% 6th input: is a struct, which configures hbi algorithm (optional)
+% 4th input: a file address for saving the output (optional)
+% 5th input: is a struct, which configures hbi algorithm (optional)
 %   see cbm_hbi_config    
-% 7th input: is another struct, which configures optimization algorithm (optional)
+% 6th input: is another struct, which configures optimization algorithm (optional)
 %   see cbm_optim_config
 % output: cbm struct containing the output of HBI
 %   cbm.methid is 'hbi'
@@ -40,17 +39,11 @@ function cbm = cbm_hbi(data,models,fcbm_maps,fname,hyper,config,optimconfigs)
 % https://journals.plos.org/ploscompbiol/article?id=10.1371/journal.pcbi.1007043
 % 
 % implemented by Payam Piray, April 2019 
-% modified to allow for custom hyperparameters by Gaia Molinaro, Apr 2024
 %==========================================================================
+
 if nargin<4, fname= []; end
-if nargin<5
-    % hyper (prior) parameters
-    b = 1; v = 0.5; s = 0.01;
-    % Note: a0 is the same as the prior mean used in each fcbm_map
-    hyper = struct('b',b,'v',v,'s',s);
-end
-if nargin<6, config= []; end
-if nargin<7, optimconfigs = []; end
+if nargin<5, config= []; end
+if nargin<6, optimconfigs = []; end
 
 %--------------------------------------------------------------------------
 % save the input structure
@@ -58,7 +51,10 @@ user_input = struct('models',{models},'fcbm_maps',{fcbm_maps},'fname',fname,...
                     'config',config,'optimconfigs',optimconfigs);
 
 %--------------------------------------------------------------------------
-
+% hyper (prior) parameters
+b = 1; v = 0.5; s = 0.01;
+% Note: a0 is the same as the prior mean used in each fcbm_map
+hyper = struct('b',b,'v',v,'s',s);
 isnull = 0;
 
 config = cbm_hbi_config(config);

@@ -1,13 +1,11 @@
-function [cbm,cbm0] = cbm_hbi_null(data,fname_cbm,hyper)
+function [cbm,cbm0] = cbm_hbi_null(data,fname_cbm)
 % cbm_hbi_null implements hierarchical Bayesian inference (HBI) under the
 % null hypothesis
 %       cbm = cbm_hbi_null(data,fname_cbm)
 % 1st input: data for all subjects
 % 2nd input: the fitted cbm (or its file-address) by cbm_hbi
-% 3rd input: hyperparameters (optional)
 % 
 % implemented by Payam Piray, Aug 2018
-% modified to allow for custom hyperparameters by Gaia Molinaro, Apr 2024
 %==========================================================================
 
 inputisfile = 0;
@@ -48,12 +46,10 @@ user_input = struct('models',{models},'fcbm_maps',{fcbm_maps},'fname',fname0,...
                     'config',config,'optimconfigs',optimconfigs);
 
 %--------------------------------------------------------------------------
-if nargin<3
-    % hyper (prior) parameters
-    b = 1; v = 0.5; s = 0.01;
-    % Note: a0 is the same as the prior mean used in each fcbm_map
-    hyper = struct('b',b,'v',v,'s',s);
-end
+% hyper (prior) parameters
+b = 1; v = 0.5; s = 0.01;
+% Note: a0 is the same as the prior mean used in each fcbm_map
+hyper = struct('b',b,'v',v,'s',s);
 isnull = 1;
 
 config = cbm_hbi_config(config);
